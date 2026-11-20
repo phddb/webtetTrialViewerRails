@@ -1,11 +1,54 @@
-webtet-trail-viewer-rails is an app that transforms raw trial data from our data warehouse (https://jsontocsvpipeline.onrender.com/) into csv files suitable for EDA and statistical analysis. 
+# Webtet Trial Viewer (Rails)
 
-Its backend is written in Rails and its frontend is written in React.
+Transforms raw trial data from the data warehouse
+([jsontocsvpipeline.onrender.com](https://jsontocsvpipeline.onrender.com/))
+into CSV files for EDA and statistical analysis.
 
-Its frontend contains a simple form specifying a date range to synchronize over, and a synchronize button. The synchronize button syncronizes the app's local postgres database with the warehouse. Pressing this button first calls the data warehouse to retrieve the ids of all trials in the date range. Then, for any id not already present in postgres, it launches a sidekiq worker. The sidekiq worker retrieves the item, and saves the relevant fields to postgres.
+Backend: Rails + Postgres + Sidekiq. Frontend: React.
 
-For now, local database (and the "trial" model) only contains the columns "uuid" (matching the warehouse id), score, cookie, audio_file_id, and raw (containing the raw cookie_trial object).
+## What it does
 
-The frontend also contains a "export" button, which exports the contents of the local database (except the "raw" column) as a csv.
+- **Synchronize** lists warehouse item ids for an optional date range (warehouse
+  `created_at`), then enqueues a Sidekiq job for each id not already stored.
+- Each job fetches the item and stores a **Trial** (`uuid`, `start_time`,
+  `score`, `cookie`, `audio_file_hash`, `raw`).
+- **Export** downloads those fields (except `raw`) as CSV, filtered by local
+  `start_time` using the same form dates.
 
-Source code for the data warehouse is here /Users/davebenson/git/jsonToCsvPipeline; the live app to contact is here https://jsontocsvpipeline.onrender.com/.
+See `GLOSSARY.md` and `docs/adr/` for the domain language and decisions.
+
+## Prerequisites
+
+- Ruby (see `.ruby-version`)
+- Node 23 (see `.nvmrc`)
+- Postgres and Redis (or Docker)
+
+## Setup
+
+```bash
+docker compose up -d   # optional if Postgres/Redis already run locally
+bundle install
+npm install
+bin/rails db:prepare
+npm run build
+gem install foreman    # used by bin/dev
+```
+
+## Run
+
+```bash
+bin/dev
+```
+
+That starts Rails, the JS watcher, and Sidekiq. Open
+[http://localhost:3000](http://localhost:3000).
+
+Optional env:
+
+- `WAREHOUSE_URL` (default `https://jsontocsvpipeline.onrender.com`)
+- `REDIS_URL` (default `redis://localhost:6379/0`)
+
+## Warehouse source
+
+Source: `/Users/davebenson/git/jsonToCsvPipeline`  
+Live: https://jsontocsvpipeline.onrender.com/

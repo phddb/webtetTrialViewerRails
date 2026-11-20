@@ -1,0 +1,103 @@
+:root {
+  --bg: #f3efe6;
+  --ink: #1d1a16;
+  --muted: #5c5348;
+  --panel: #fffdf8;
+  --line: #d5cbb8;
+  --accent: #0f5c4c;
+  --error: #8a1f1f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(15, 92, 76, 0.12), transparent 40%),
+    linear-gradient(180deg, #efe7d8 0%, var(--bg) 45%, #e7e1d4 100%);
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  margin: 0 0 2rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+input[type="date"] {
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+button[type="button"] {
+  background: transparent;
+  color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.status {
+  margin-top: 1.25rem;
+  line-height: 1.4;
+}
+
+.status.ok {
+  color: var(--accent);
+}
+
+.status.error {
+  color: var(--error);
+}
